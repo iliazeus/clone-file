@@ -2,6 +2,9 @@ use std::fs::{self, File};
 use std::io::{self, Read, Seek, SeekFrom};
 use std::path::Path;
 
+/// Tries to clone the file with [crate::clone_file], falling back to [fs::copy] on error
+///
+/// Returns `Ok(None)` on successful clone, `Ok(Some(copied_byte_count))` on successful [fs::copy].
 pub fn clone_or_copy_file<P: AsRef<Path>, Q: AsRef<Path>>(
     src: P,
     dest: Q,
@@ -13,6 +16,9 @@ pub fn clone_or_copy_file<P: AsRef<Path>, Q: AsRef<Path>>(
     }
 }
 
+/// Tries to clone a range of bytes to another file, falling back to [copy_file_range] on error
+///
+/// Returns `Ok(None)` on successful clone, `Ok(Some(copied_byte_count))` on successful naive copy.
 pub fn clone_or_copy_file_range<P: AsRef<Path>, Q: AsRef<Path>>(
     src: P,
     src_offset: u64,
@@ -27,6 +33,11 @@ pub fn clone_or_copy_file_range<P: AsRef<Path>, Q: AsRef<Path>>(
     }
 }
 
+/// Naively copy a range of bytes from one file to another
+///
+/// This function is mainly implemented as a fallback for [clone_or_copy_file_range].
+///
+/// Returns `Ok(copied_byte_count)` on success.
 pub fn copy_file_range<P: AsRef<Path>, Q: AsRef<Path>>(
     src: P,
     src_offset: u64,

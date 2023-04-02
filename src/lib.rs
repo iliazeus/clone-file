@@ -2,14 +2,14 @@ mod common;
 
 pub use common::*;
 
-#[cfg(target_os = "linux")]
-mod linux;
+#[cfg(any(doc, target_os = "linux"))]
+pub mod linux;
 
 #[cfg(target_os = "linux")]
 pub use linux::*;
 
-#[cfg(not(target_os = "linux"))]
-mod other;
+#[cfg(any(doc, not(target_os = "linux")))]
+pub mod unsupported;
 
 #[cfg(not(target_os = "linux"))]
-pub use other::*;
+pub use unsupported::*;

@@ -3,6 +3,13 @@ use std::io;
 use std::os::fd::AsRawFd;
 use std::path::Path;
 
+/// Clone a file using the FICLONE syscall
+///
+/// This is mainly tested on the `btrfs` filesystem.
+///
+/// For the details on the limitations of this method, see [`man 2 ioctl_ficlonerange`].
+///
+/// [`man 2 ioctl_ficlonerange`]: https://man7.org/linux/man-pages/man2/ioctl_ficlonerange.2.html
 pub fn clone_file<P: AsRef<Path>, Q: AsRef<Path>>(src: P, dest: Q) -> io::Result<()> {
     let src_file = File::open(src)?;
     let dest_file = File::options()
@@ -17,6 +24,16 @@ pub fn clone_file<P: AsRef<Path>, Q: AsRef<Path>>(src: P, dest: Q) -> io::Result
     }
 }
 
+/// Clone a range from a file using the FICLONERANGE syscall
+///
+/// This is mainly tested on the `btrfs` filesystem.
+///
+/// For the details on the limitations of this method, see [`man 2 ioctl_ficlonerange`].
+///
+/// One of the more common limitations is that `src_offset`, `src_length` and `dest_offset`
+/// must be multiples of the filesystem block size. Expect this function to fail if that is not the case.
+///
+/// [`man 2 ioctl_ficlonerange`]: https://man7.org/linux/man-pages/man2/ioctl_ficlonerange.2.html
 pub fn clone_file_range<P: AsRef<Path>, Q: AsRef<Path>>(
     src: P,
     src_offset: u64,

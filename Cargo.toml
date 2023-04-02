@@ -1,11 +1,18 @@
 [package]
 name = "clone-file"
 version = "0.1.0"
+description = "functions to clone files and file ranges with as little overhead as possible"
+
+repository = "https://github.com/iliazeus/clone-file"
+authors = ["Ilia Pozdnyakov <ilia.pozdnyakov@ya.ru>"]
+license = "MIT"
+
+keywords = ["reflink", "ficlone", "ficlonerange"]
+categories = ["filesystem"]
+
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[target.'cfg(unix)'.dependencies]
+[target.'cfg(target_os = "linux")'.dependencies]
 nix = { version = "0.26.2", default-features = false, features = ["ioctl"] }
 
 [dev-dependencies]
